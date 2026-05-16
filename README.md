@@ -17,7 +17,7 @@ No spam, no duplicates — the same message is edited in place on every cycle. O
 
 - **Version:** 1.0.0
 - **License:** MIT (see [LICENSE.txt](LICENSE.txt))
-- **Source:** <TODO: GitHub repo URL>
+- **Source:** https://github.com/naghell/gameservercheck-addon-drako-bot
 
 ## Install
 
@@ -34,8 +34,10 @@ See [SETUP.md](SETUP.md) for the full walkthrough, configuration, and troublesho
 
 ## Support development
 
-This addon is free and open-source. If it saves you time and you'd like to support further work on it, you can grab it for $2.99 at:
+This addon is **free and open-source under MIT** — the GitHub repo above always has the latest version at no cost.
 
-<TODO: marketplace listing URL>
+If it saves you time and you'd like to support continued development (new features, more games, faster issue response), grabbing it for **$2.99** on BuiltByBit is the easiest way to do that. You get the exact same files as the repo — the price is a tip, not a paywall.
 
-PRs and issues on GitHub are also welcome.
+- **BuiltByBit listing:** <TODO: paste the BBB listing URL here once published>
+
+PRs and issues on GitHub are always welcome too.

@@ -1,6 +1,6 @@
 # GameServerStatus — Setup
 
-A Drako Bot addon that publishes **one auto-updating message per channel** with the live status of your game servers (Minecraft, Garry's Mod, CS, Rust, Valheim, and ~570 others). Same message edited in place every cycle — no spam, no duplicates. Powered by [`gamedig`](https://github.com/gamedig/node-gamedig).
+A **Drako Bot** addon that publishes a single auto-updating Discord embed per channel with the live status of your game servers — **Minecraft (Java & Bedrock), Garry's Mod, Counter-Strike 2, Rust, Valheim, ARK, Palworld, DayZ, Squad, Project Zomboid**, and ~570 more games supported by [`gamedig`](https://github.com/gamedig/node-gamedig). Same message edited in place every cycle — no spam, no duplicates. Optional voice-channel display, English & Spanish out of the box.
 
 > Looking for architecture, internals, or extension points? See [DOCS.md](DOCS.md).
 
@@ -413,4 +413,4 @@ The addon ships with **English** (`en`) and **Spanish** (`es`). To add a new lan
 - Stop the bot, delete `addons/GameServerStatus/data/state.json`, delete the channel messages manually, restart. The addon will publish a new message.
 
 **Found a bug or want a feature?**
-- Open an issue at <TODO: GitHub repo URL>/issues. PRs welcome.
+- Open an issue at https://github.com/naghell/gameservercheck-addon-drako-bot/issues. PRs welcome.
