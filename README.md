@@ -38,6 +38,6 @@ This addon is **free and open-source under MIT** — the GitHub repo above alway
 
 If it saves you time and you'd like to support continued development (new features, more games, faster issue response), grabbing it for **$2.99** on BuiltByBit is the easiest way to do that. You get the exact same files as the repo — the price is a tip, not a paywall.
 
-- **BuiltByBit listing:** <TODO: paste the BBB listing URL here once published>
+- **BuiltByBit listing:** https://builtbybit.com/resources/drako-bot-game-server-check.108053/
 
 PRs and issues on GitHub are always welcome too.
