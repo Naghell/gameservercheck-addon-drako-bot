@@ -1,0 +1,126 @@
+# ===========================================================================
+# GameServerStatus — Language: English
+# ===========================================================================
+# Edit any text freely. Keep the curly-brace placeholders intact
+# (e.g. {interval}, {server}) — they are replaced at runtime.
+#
+# To switch the active language, edit "Language" in config.yml.
+# To add a new language, copy this file to lang/<code>.yml and translate.
+
+addon:
+  description: "Live status of game servers (Minecraft, Garry's Mod, etc.) using a single in-place edited embed."
+
+lifecycle:
+  disabled: "Disabled in config.yml."
+  started: "Started. Interval: {interval}s. Servers: {count}."
+  stopped: "Stopped."
+  cleanupFailed: "Orphan cleanup failed for {server}: {error}"
+  tickFailed: "Tick failed: {error}"
+  processServerError: "processServer error for {server}: {error}"
+  queryOffline: "Query offline ({server}): {error}"
+  gamedigMissing: "The 'gamedig' package is not installed. Add \"gamedig\": \"^5.3.2\" to the \"dependencies\" of your bot's package.json (next to discord.js and the other packages), then run 'npm install' from the bot's root directory and restart. The addon is disabled until then."
+
+interactions:
+  noFreshData: "I don't have fresh data for that server yet. Try again in a few seconds."
+  noPlayersOnline: "There are 0 players connected right now."
+  serverOffline: "The server is offline right now. Try again later."
+  serverOnline: "Server online. Connect using: `{address}`{hint}"
+  minecraftHint: "\nAdd the server manually inside Minecraft if it doesn't open automatically."
+  garrysmodHint: "\nQuick link: `steam://connect/{address}`"
+  playersHeader: "**{name}** — {online}/{max} players"
+  playersListLabel: "Players"
+  botsListLabel: "Bots"
+  replyFailed: "Could not reply to interaction: {error}"
+  buttonError: "Error responding to button {type}: {error}"
+  copyIpResponse: "Copy the server IP: `{ip}`"
+
+messages:
+  channelFetchFailed: "Could not fetch channel {channelId} ({server}): {error}"
+  oldMessageDeleted: "Previous message for {key} was deleted; sending a new one."
+  editFailed: "Edit failed for {key} ({code}): {error}. Keeping current message."
+  editFailedNoCode: "no code"
+  sendFailed: "Could not send message for {key}: {error}"
+  scanFailed: "Could not scan {channel}: {error}"
+  adopted: "Adopted existing message {messageId} in #{channel} ({server})."
+  bulkDeleteFailed: "bulkDelete failed in {channel}: {error}. Falling back to individual delete."
+  deleteFailed: "Delete failed {messageId}: {error}"
+  cleanupSummary: "Cleanup in #{channel} ({server}): {summary} deleted{adopted}."
+  duplicatesLabel: "{count} duplicate(s)"
+  legacyLabel: "{count} from old ServerCheck"
+  adoptedSuffix: ", adopted {messageId}"
+
+state:
+  corrupted: "state.json is corrupt or unreadable, starting from empty state: {error}"
+  saveFailed: "Error saving state.json: {error}"
+
+migration:
+  applied: "Migrated config from v{from} to v{to}."
+  backupSaved: "Previous config saved as: {backup}"
+  persistFailed: "Could not persist migrated config: {error}. The migration is held in memory for this run only."
+  aheadOfCode: "Config Version (v{config}) is newer than this addon (v{code}). Skipping migration; check for an addon update."
+
+config:
+  serversArrayInvalid: "config.Servers must be an array with at least one server."
+  intervalTooLow: "UpdateInterval ({value}s) below the minimum, adjusting to {min}s."
+  missingChannelId: "Servers[{idx}] is missing ChannelID."
+  missingServerIp: "Servers[{idx}] is missing ServerIP."
+  invalidYaml: "config.yml is invalid YAML: {error}"
+  notAnObject: "config.yml does not contain a valid YAML object."
+  configNotFound: "config.yml not found, generating with defaults."
+  invalidLanguage: "Language '{lang}' not found in lang/. Falling back to '{fallback}'."
+  langFileError: "Error loading lang/{lang}.yml: {error}. Falling back to '{fallback}'."
+  missingKey: "Missing translation for key '{key}' in lang/{lang}.yml"
+  channelIdPlaceholder: "Servers[{idx}] ({server}) still uses a placeholder ChannelID. Edit config.yml and replace it with a real Discord channel ID. Skipping this server."
+  serverIpPlaceholder: "Servers[{idx}] ({server}) still uses a placeholder ServerIP. Edit config.yml and set a real game server address. Skipping this server."
+  allServersPlaceholders: "No valid servers configured. Edit addons/GameServerStatus/config.yml — replace the ChannelID and ServerIP placeholders — then restart the bot."
+
+embed:
+  footer:
+    minecraft: "Minecraft | Server Status"
+    garrysmod: "Garry's Mod | Server Status"
+    default: "{game} | Server Status"
+  fields:
+    address: "📡 IP"
+    version: "💻 Version"
+    map: "🗺️ Map"
+    gameMode: "🎮 Game Mode"
+    players: "👥 Players"
+  buttons:
+    connect: "Connect"
+    viewAllPlayers: "View all players"
+    copyIp: "Copy IP"
+
+voice:
+  dividerTop:
+    format: "━━━━━━━━━━━━━━━"
+  label:
+    format: "🎮 {server}"
+  status:
+    online: "🟢 Status: Online"
+    offline: "🔴 Status: Offline"
+  playerCount:
+    online: "👥 Online: {online}/{max}"
+    offline: "👥 Online: 0/0"
+  ip:
+    format: "📡 IP: {ip}"
+  version:
+    online: "💻 Version: {version}"
+    offline: "💻 Version: -"
+  map:
+    online: "🗺️ Map: {map}"
+    offline: "🗺️ Map: -"
+  gameMode:
+    online: "🎮 Mode: {gameMode}"
+    offline: "🎮 Mode: -"
+  dividerBottom:
+    format: "━━━━━━━━━━━━━━━"
+  logs:
+    categoryCreated: "Voice category '{name}' created in guild {guild}."
+    categoryAdopted: "Voice category reused: '{name}' ({id})."
+    channelCreated: "Voice channel '{name}' created under '{category}'."
+    noCategoryLabel: "(no category)"
+    channelRecreated: "Voice channel {id} was missing; will recreate as {newId}."
+    rateLimited: "Rename skipped for {type} ({server}): throttled ({seconds}s since last rename)."
+    setupFailed: "Voice display setup failed for {server}: {error}"
+    updateFailed: "Voice channel update failed ({type}, {server}): {error}"
+    permissionMissing: "Missing ManageChannels in guild {guild}; voice display disabled for {server}."

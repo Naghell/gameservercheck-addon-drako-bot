@@ -1,0 +1,127 @@
+# ===========================================================================
+# GameServerStatus — Idioma: Español
+# ===========================================================================
+# Edita libremente los textos. Mantén los marcadores entre llaves intactos
+# (ej. {interval}, {server}) — son reemplazados en tiempo de ejecución.
+#
+# Para cambiar el idioma activo, edita "Language" en config.yml.
+# Para agregar un idioma nuevo, copia este archivo a lang/<código>.yml
+# y traduce los valores.
+
+addon:
+  description: "Estado en vivo de servidores de juego (Minecraft, Garry's Mod, etc.) con un solo embed editado en su lugar."
+
+lifecycle:
+  disabled: "Deshabilitado en config.yml."
+  started: "Iniciado. Intervalo: {interval}s. Servidores: {count}."
+  stopped: "Detenido."
+  cleanupFailed: "Limpieza de huérfanos falló para {server}: {error}"
+  tickFailed: "Tick falló: {error}"
+  processServerError: "processServer error para {server}: {error}"
+  queryOffline: "Query offline ({server}): {error}"
+  gamedigMissing: "El paquete 'gamedig' no está instalado. Agrega \"gamedig\": \"^5.3.2\" a la sección \"dependencies\" del package.json de tu bot (al lado de discord.js y los demás paquetes), luego corre 'npm install' desde la raíz del bot y reinicia. El addon queda deshabilitado hasta entonces."
+
+interactions:
+  noFreshData: "Todavía no tengo datos frescos de ese servidor. Intenta de nuevo en unos segundos."
+  noPlayersOnline: "Hay 0 jugadores conectados ahora mismo."
+  serverOffline: "El servidor está offline ahora mismo. Prueba más tarde."
+  serverOnline: "Servidor en línea. Conéctate usando: `{address}`{hint}"
+  minecraftHint: "\nAgrega el servidor manualmente dentro de Minecraft si no se abre automáticamente."
+  garrysmodHint: "\nLink rápido: `steam://connect/{address}`"
+  playersHeader: "**{name}** — {online}/{max} jugadores"
+  playersListLabel: "Jugadores"
+  botsListLabel: "Bots"
+  replyFailed: "No se pudo responder a la interacción: {error}"
+  buttonError: "Error respondiendo botón {type}: {error}"
+  copyIpResponse: "Copia la IP del servidor: `{ip}`"
+
+messages:
+  channelFetchFailed: "No se pudo obtener canal {channelId} ({server}): {error}"
+  oldMessageDeleted: "Mensaje previo de {key} fue borrado; se enviará uno nuevo."
+  editFailed: "Edit falló para {key} ({code}): {error}. Conservando mensaje actual."
+  editFailedNoCode: "sin código"
+  sendFailed: "No se pudo enviar mensaje para {key}: {error}"
+  scanFailed: "No se pudo escanear {channel}: {error}"
+  adopted: "Adoptado mensaje existente {messageId} en #{channel} ({server})."
+  bulkDeleteFailed: "bulkDelete falló en {channel}: {error}. Intentando borrado individual."
+  deleteFailed: "Delete falló {messageId}: {error}"
+  cleanupSummary: "Limpieza en #{channel} ({server}): {summary} borrados{adopted}."
+  duplicatesLabel: "{count} duplicado(s)"
+  legacyLabel: "{count} de ServerCheck viejo"
+  adoptedSuffix: ", adoptado {messageId}"
+
+state:
+  corrupted: "state.json corrupto o ilegible, partiendo de estado vacío: {error}"
+  saveFailed: "Error guardando state.json: {error}"
+
+migration:
+  applied: "Config migrada de v{from} a v{to}."
+  backupSaved: "Config previa guardada como: {backup}"
+  persistFailed: "No se pudo persistir la config migrada: {error}. La migración sólo aplica a esta ejecución."
+  aheadOfCode: "La Version de la config (v{config}) es más nueva que el addon (v{code}). No se migra; verifica si hay un update del addon."
+
+config:
+  serversArrayInvalid: "config.Servers debe ser un array con al menos un servidor."
+  intervalTooLow: "UpdateInterval ({value}s) por debajo del mínimo, ajustando a {min}s."
+  missingChannelId: "Servers[{idx}] no tiene ChannelID."
+  missingServerIp: "Servers[{idx}] no tiene ServerIP."
+  invalidYaml: "config.yml es YAML inválido: {error}"
+  notAnObject: "config.yml no contiene un objeto YAML válido."
+  configNotFound: "config.yml no encontrado, generando con defaults."
+  invalidLanguage: "Idioma '{lang}' no encontrado en lang/. Usando fallback '{fallback}'."
+  langFileError: "Error cargando lang/{lang}.yml: {error}. Usando fallback '{fallback}'."
+  missingKey: "Falta la traducción para la key '{key}' en lang/{lang}.yml"
+  channelIdPlaceholder: "Servers[{idx}] ({server}) aún usa un ChannelID de ejemplo. Edita config.yml y reemplázalo por un ID de canal de Discord real. Servidor omitido."
+  serverIpPlaceholder: "Servers[{idx}] ({server}) aún usa un ServerIP de ejemplo. Edita config.yml y coloca una dirección real del servidor de juego. Servidor omitido."
+  allServersPlaceholders: "No hay servidores válidos configurados. Edita addons/GameServerStatus/config.yml — reemplaza los placeholders de ChannelID y ServerIP — y reinicia el bot."
+
+embed:
+  footer:
+    minecraft: "Minecraft | Estado del servidor"
+    garrysmod: "Garry's Mod | Estado del servidor"
+    default: "{game} | Estado del servidor"
+  fields:
+    address: "📡 IP"
+    version: "💻 Versión"
+    map: "🗺️ Mapa"
+    gameMode: "🎮 Modo de Juego"
+    players: "👥 Jugadores"
+  buttons:
+    connect: "Conectar"
+    viewAllPlayers: "Ver todos los jugadores"
+    copyIp: "Copiar IP"
+
+voice:
+  dividerTop:
+    format: "━━━━━━━━━━━━━━━"
+  label:
+    format: "🎮 {server}"
+  status:
+    online: "🟢 Estado: En línea"
+    offline: "🔴 Estado: Offline"
+  playerCount:
+    online: "👥 Jugadores: {online}/{max}"
+    offline: "👥 Jugadores: 0/0"
+  ip:
+    format: "📡 IP: {ip}"
+  version:
+    online: "💻 Versión: {version}"
+    offline: "💻 Versión: -"
+  map:
+    online: "🗺️ Mapa: {map}"
+    offline: "🗺️ Mapa: -"
+  gameMode:
+    online: "🎮 Modo: {gameMode}"
+    offline: "🎮 Modo: -"
+  dividerBottom:
+    format: "━━━━━━━━━━━━━━━"
+  logs:
+    categoryCreated: "Categoría de voz '{name}' creada en el guild {guild}."
+    categoryAdopted: "Categoría de voz reutilizada: '{name}' ({id})."
+    channelCreated: "Canal de voz '{name}' creado bajo '{category}'."
+    noCategoryLabel: "(sin categoría)"
+    channelRecreated: "Canal de voz {id} no existía; se recreará como {newId}."
+    rateLimited: "Renombrado omitido para {type} ({server}): throttle activo ({seconds}s desde el último cambio)."
+    setupFailed: "Setup de Voice Display falló para {server}: {error}"
+    updateFailed: "Actualización de canal de voz falló ({type}, {server}): {error}"
+    permissionMissing: "Falta el permiso ManageChannels en el guild {guild}; Voice Display deshabilitado para {server}."
