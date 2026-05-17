@@ -12,6 +12,18 @@ const { t } = require('./i18n');
 
 const UNKNOWN_MESSAGE_CODE = 10008;
 const FOURTEEN_DAYS_MS = 14 * 24 * 60 * 60 * 1000;
+// Sticky-online: while we have a recent successful query with players,
+// tolerate this many consecutive failed queries before flipping to offline.
+const MAX_GRACE_FAILURES = 2;
+
+// Fingerprint the payload (minus the auto-timestamp) so we can skip Discord
+// edits when nothing meaningful changed since the last tick.
+function payloadFingerprint(embed, components) {
+    const e = embed.toJSON();
+    delete e.timestamp;
+    const c = components.map(comp => comp.toJSON());
+    return JSON.stringify({ e, c });
+}
 
 class StatusController {
     constructor(client, config) {
@@ -71,43 +83,72 @@ class StatusController {
     }
 
     async tick() {
+        const promises = [];
         for (const server of this.config.Servers) {
             if (this.stopping) return;
             const serverKey = sanitizeServerKey(server.ServerIP);
             const prev = this.inFlight.get(serverKey) || Promise.resolve();
-            const next = prev.then(() => this.processServer(server, serverKey)).catch(err => {
+            const next = prev.then(() => {
+                if (this.stopping) return;
+                return this.processServer(server, serverKey);
+            }).catch(err => {
                 log.error(t('lifecycle.processServerError', { server: server.ServerName, error: err.message }));
             });
             this.inFlight.set(serverKey, next);
-            await next;
+            promises.push(next);
         }
+        await Promise.all(promises);
     }
 
     async processServer(server, serverKey) {
         const channel = await this.fetchChannel(server);
         if (!channel) return;
 
-        const { data, error } = await queryServer(server);
+        const { data: freshData, error } = await queryServer(server);
         if (error && this.config.Debug) {
             log.debug(t('lifecycle.queryOffline', { server: server.ServerName, error: error.message }));
         }
 
+        const cached = this.cache.get(serverKey);
+        let lastGood = cached?.lastGood || null;
+        let consecutiveFailures;
+        let effectiveData = freshData;
+
+        if (freshData.online) {
+            consecutiveFailures = 0;
+            lastGood = freshData;
+        } else {
+            consecutiveFailures = (cached?.consecutiveFailures || 0) + 1;
+            const canHold = lastGood?.online
+                && (lastGood.players?.online || 0) > 0
+                && consecutiveFailures <= MAX_GRACE_FAILURES;
+            if (canHold) {
+                effectiveData = lastGood;
+            }
+        }
+
+        const { embed, components } = buildEmbed(server, effectiveData, serverKey);
+        const fingerprint = payloadFingerprint(embed, components);
+        const unchanged = cached?.lastFingerprint === fingerprint;
+
         const { display } = parseAddress(server.ServerIP, server.GameType);
         this.cache.set(serverKey, {
-            data,
+            data: effectiveData,
+            lastGood,
+            consecutiveFailures,
+            lastFingerprint: fingerprint,
             serverConfig: server,
             serverAddress: display,
             gameType: server.GameType || 'minecraft'
         });
 
-        const { embed, components } = buildEmbed(server, data, serverKey);
-        await this.upsertMessage(serverKey, channel, embed, components);
+        await this.upsertMessage(serverKey, channel, embed, components, unchanged);
 
         if (server.VoiceDisplay?.Enabled) {
             try {
                 const prev = await stateStore.get(serverKey);
                 const patch = await voiceDisplay.updateNames(
-                    this.client, server, server.VoiceDisplay, prev?.voice || null, data
+                    this.client, server, server.VoiceDisplay, prev?.voice || null, effectiveData
                 );
                 if (patch) {
                     await stateStore.merge(serverKey, { voice: patch });
@@ -131,8 +172,11 @@ class StatusController {
         }
     }
 
-    async upsertMessage(serverKey, channel, embed, components) {
+    async upsertMessage(serverKey, channel, embed, components, skipIfUnchanged = false) {
         const entry = await stateStore.get(serverKey);
+        if (skipIfUnchanged && entry?.messageId && entry.channelId === channel.id) {
+            return;
+        }
         const payload = { embeds: [embed], components };
 
         if (entry?.messageId && entry.channelId === channel.id) {

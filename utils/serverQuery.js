@@ -10,6 +10,12 @@ const DEFAULT_PORTS = {
     garrysmod: 27015
 };
 
+// Aggressive timeouts: a single attempt with short waits keeps ticks snappy.
+// Transient failures are masked by the sticky-online grace in StatusController.
+const QUERY_SOCKET_TIMEOUT_MS = 1500;
+const QUERY_ATTEMPT_TIMEOUT_MS = 2500;
+const QUERY_MAX_ATTEMPTS = 1;
+
 function sanitizeServerKey(serverIP) {
     return serverIP.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
 }
@@ -74,7 +80,10 @@ async function queryServer(server) {
         state = await getGameDig().query({
             type: gameType,
             host,
-            port
+            port,
+            socketTimeout: QUERY_SOCKET_TIMEOUT_MS,
+            attemptTimeout: QUERY_ATTEMPT_TIMEOUT_MS,
+            maxAttempts: QUERY_MAX_ATTEMPTS
         });
     } catch (err) {
         return { data: offlinePayload(display), error: err };
