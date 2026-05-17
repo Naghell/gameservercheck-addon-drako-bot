@@ -1,6 +1,6 @@
 # GameServerStatus — Setup
 
-A **Drako Bot** addon that publishes a single auto-updating Discord embed per channel with the live status of your game servers — **Minecraft (Java & Bedrock), Garry's Mod, Counter-Strike 2, Rust, Valheim, ARK, Palworld, DayZ, Squad, Project Zomboid**, and ~570 more games supported by [`gamedig`](https://github.com/gamedig/node-gamedig). Same message edited in place every cycle — no spam, no duplicates. Optional voice-channel display, English & Spanish out of the box.
+A **Drako Bot** addon that publishes a single auto-updating Discord embed per channel with the live status of your game servers — **Minecraft (Java & Bedrock), Garry's Mod, Counter-Strike 2, Rust, Valheim, ARK, Palworld, DayZ, Squad, Project Zomboid**, and ~300 more games supported by [`gamedig`](https://github.com/gamedig/node-gamedig). Same message edited in place every cycle — no spam, no duplicates. Optional voice-channel display, English & Spanish out of the box.
 
 > Looking for architecture, internals, or extension points? See [DOCS.md](DOCS.md).
 
@@ -158,7 +158,7 @@ If you enable voice display (section 6), also at the guild or category level:
 
 ## 3. Supported games (`GameType`)
 
-`gamedig` supports **~570 games**. Most common ones:
+`gamedig` supports **~300 games**. Most common ones:
 
 | Game | `GameType` | Default port |
 |---|---|---|

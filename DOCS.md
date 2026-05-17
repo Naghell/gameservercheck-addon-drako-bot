@@ -24,7 +24,7 @@ The addon is fully event-driven: there are no slash commands and no message comm
 ```js
 module.exports = {
     name: 'GameServerStatus',
-    version: '1.0.0',
+    version: '1.0.1',
     description: t('addon.description'),
     author: 'Naghell & contributors',
     run(client, _eventManager) { ... },
@@ -265,7 +265,7 @@ The top-level `Version` key in `config.yml` tracks the schema version. [configMi
 
 ### Known migrations
 
-None — the addon is pre-release at `1.0.0`. The `MIGRATIONS` array in [configMigrator.js](utils/configMigrator.js) is empty. Once we ship the first stable version and the schema starts evolving, append entries here following the contract below.
+None — the config schema is still at `1.0.0`. The `MIGRATIONS` array in [configMigrator.js](utils/configMigrator.js) is empty. Once the schema starts evolving, append entries here following the contract below.
 
 ### Adding a new migration
 

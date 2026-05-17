@@ -1,6 +1,6 @@
 # GameServerStatus
 
-A **Drako Bot** addon that publishes a single auto-updating Discord embed per channel with the live status of your game servers — **Minecraft (Java & Bedrock), Garry's Mod, Counter-Strike 2, Rust, Valheim, ARK, Palworld, DayZ, 7 Days to Die, Squad, Project Zomboid**, and ~570 more games supported by [`gamedig`](https://github.com/gamedig/node-gamedig).
+A **Drako Bot** addon that publishes a single auto-updating Discord embed per channel with the live status of your game servers — **Minecraft (Java & Bedrock), Garry's Mod, Counter-Strike 2, Rust, Valheim, ARK, Palworld, DayZ, 7 Days to Die, Squad, Project Zomboid**, and ~300 more games supported by [`gamedig`](https://github.com/gamedig/node-gamedig).
 
 No spam, no duplicates — the same message is edited in place on every cycle. Optional voice-channel display renders the same data into channel names. Multilingual (English & Spanish out of the box, drop-in `lang/<code>.yml` to add more).
 
@@ -12,10 +12,10 @@ No spam, no duplicates — the same message is edited in place on every cycle. O
 - **Self-healing** — orphan messages from previous runs (or older addons) are cleaned up automatically on boot.
 - **Atomic state** — crash-safe JSON persistence (write-to-temp + rename).
 - **i18n** — English + Spanish included; per-game footers and button hints.
-- **570+ games** via gamedig.
+- **300+ games** via gamedig.
 - **Free & open-source** (MIT).
 
-- **Version:** 1.0.0
+- **Version:** 1.0.1
 - **License:** MIT (see [LICENSE.txt](LICENSE.txt))
 - **Source:** https://github.com/naghell/gameservercheck-addon-drako-bot
 
