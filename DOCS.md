@@ -24,7 +24,7 @@ The addon is fully event-driven: there are no slash commands and no message comm
 ```js
 module.exports = {
     name: 'GameServerStatus',
-    version: '1.0.1',
+    version: '1.1.0',
     description: t('addon.description'),
     author: 'Naghell & contributors',
     run(client, _eventManager) { ... },

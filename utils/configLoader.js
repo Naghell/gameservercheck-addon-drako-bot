@@ -60,6 +60,12 @@ Servers:
     ChannelID: "REPLACE_WITH_CHANNEL_ID"
     ServerIP: "play.example.com:25565"
     GameType: "minecraft"
+    # Optional (Minecraft only). If ServerIP above points to a BungeeCord/Velocity
+    # proxy that does not expose the player NAME list, set this to the backend
+    # server (lobby/hub) the names should be queried from. Only the list of
+    # names is taken from here — online/max count, version, MOTD, the displayed
+    # IP and the connect button all keep using ServerIP above.
+    # PlayerListIP: "lobby.internal:25566"
     EmbedSettings:
       # Custom thumbnail URL. Empty = auto icon (Minecraft Java only, via mcstatus.io).
       ThumbnailImage: ""
@@ -220,6 +226,24 @@ function validate(config) {
 
         if (!server.ServerName) server.ServerName = server.ServerIP;
         if (!server.GameType) server.GameType = 'minecraft';
+
+        if (typeof server.PlayerListIP === 'string') {
+            const trimmed = server.PlayerListIP.trim();
+            if (!trimmed) {
+                delete server.PlayerListIP;
+            } else if (server.GameType !== 'minecraft') {
+                log.warn(t('config.playerListIpIgnored', {
+                    server: label,
+                    gameType: server.GameType
+                }));
+                delete server.PlayerListIP;
+            } else {
+                server.PlayerListIP = trimmed;
+            }
+        } else if (server.PlayerListIP != null) {
+            delete server.PlayerListIP;
+        }
+
         server.EmbedSettings = server.EmbedSettings || {};
         server.EmbedSettings.ConnectButton = server.EmbedSettings.ConnectButton || {};
         server.EmbedSettings.PlayersButton = server.EmbedSettings.PlayersButton || {};

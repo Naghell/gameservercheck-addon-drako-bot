@@ -15,7 +15,7 @@ No spam, no duplicates — the same message is edited in place on every cycle. O
 - **300+ games** via gamedig.
 - **Free & open-source** (MIT).
 
-- **Version:** 1.0.1
+- **Version:** 1.1.0
 - **License:** MIT (see [LICENSE.txt](LICENSE.txt))
 - **Source:** https://github.com/naghell/gameservercheck-addon-drako-bot
 

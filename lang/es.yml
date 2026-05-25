@@ -74,6 +74,7 @@ config:
   channelIdPlaceholder: "Servers[{idx}] ({server}) aún usa un ChannelID de ejemplo. Edita config.yml y reemplázalo por un ID de canal de Discord real. Servidor omitido."
   serverIpPlaceholder: "Servers[{idx}] ({server}) aún usa un ServerIP de ejemplo. Edita config.yml y coloca una dirección real del servidor de juego. Servidor omitido."
   allServersPlaceholders: "No hay servidores válidos configurados. Edita addons/GameServerStatus/config.yml — reemplaza los placeholders de ChannelID y ServerIP — y reinicia el bot."
+  playerListIpIgnored: "PlayerListIP definido para '{server}' pero GameType es '{gameType}' — ignorado (solo Minecraft)."
 
 embed:
   footer:

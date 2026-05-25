@@ -1,3 +1,5 @@
+const log = require('./logger');
+
 let _GameDig = null;
 function getGameDig() {
     if (_GameDig) return _GameDig;
@@ -89,12 +91,38 @@ async function queryServer(server) {
         return { data: offlinePayload(display), error: err };
     }
 
-    const playerList = extractList(state.players);
-    const botList = extractList(state.bots);
+    let playerList = extractList(state.players);
+    let botList = extractList(state.bots);
 
     let gameMode = '';
     if (gameType === 'garrysmod' && state.raw) {
         gameMode = state.raw.gamemode || state.raw.game || state.raw.game_dir || '';
+    }
+
+    // Optional Minecraft-only secondary query for the player NAME list when the
+    // primary endpoint is a proxy (BungeeCord/Velocity) that exposes the count
+    // but not the names. We replace only players.list/bots here — every other
+    // field still comes from the primary query.
+    if (gameType === 'minecraft'
+        && typeof server.PlayerListIP === 'string'
+        && server.PlayerListIP.trim()) {
+        try {
+            const alt = parseAddress(server.PlayerListIP, 'minecraft');
+            const altState = await getGameDig().query({
+                type: 'minecraft',
+                host: alt.host,
+                port: alt.port,
+                socketTimeout: QUERY_SOCKET_TIMEOUT_MS,
+                attemptTimeout: QUERY_ATTEMPT_TIMEOUT_MS,
+                maxAttempts: QUERY_MAX_ATTEMPTS
+            });
+            const altList = extractList(altState.players);
+            const altBots = extractList(altState.bots);
+            if (altList.length > 0) playerList = altList;
+            if (altBots.length > 0) botList = altBots;
+        } catch (err) {
+            log.debug(`PlayerListIP query failed for ${server.ServerName || server.ServerIP}: ${err.message}`);
+        }
     }
 
     return {
