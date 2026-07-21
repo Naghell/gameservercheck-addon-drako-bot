@@ -18,7 +18,10 @@ lifecycle:
   cleanupFailed: "Limpieza de huérfanos falló para {server}: {error}"
   tickFailed: "Tick falló: {error}"
   processServerError: "processServer error para {server}: {error}"
-  queryOffline: "Query offline ({server}): {error}"
+  queryOffline: "Query offline ({server}) [{gameType} {address}]: {error}"
+  queryOk: "Query OK ({server}) [{gameType} {address}] jugadores={online}/{max} ping={ping}ms"
+  graceHold: "Reteniendo último estado bueno de {server} (fallo {failures}/{max})."
+  graceExpired: "Gracia agotada para {server} tras {failures} fallos → offline."
   gamedigMissing: "El paquete 'gamedig' no está instalado. Agrega \"gamedig\": \"^5.3.2\" a la sección \"dependencies\" del package.json de tu bot (al lado de discord.js y los demás paquetes), luego corre 'npm install' desde la raíz del bot y reinicia. El addon queda deshabilitado hasta entonces."
 
 interactions:
@@ -80,6 +83,8 @@ embed:
   footer:
     minecraft: "Minecraft | Estado del servidor"
     garrysmod: "Garry's Mod | Estado del servidor"
+    killingfloor: "Killing Floor | Estado del servidor"
+    projectzomboid: "Project Zomboid | Estado del servidor"
     default: "{game} | Estado del servidor"
   fields:
     address: "📡 IP"

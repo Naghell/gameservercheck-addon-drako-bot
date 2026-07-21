@@ -12,11 +12,36 @@ const DEFAULT_PORTS = {
     garrysmod: 27015
 };
 
-// Aggressive timeouts: a single attempt with short waits keeps ticks snappy.
-// Transient failures are masked by the sticky-online grace in StatusController.
-const QUERY_SOCKET_TIMEOUT_MS = 1500;
-const QUERY_ATTEMPT_TIMEOUT_MS = 2500;
-const QUERY_MAX_ATTEMPTS = 1;
+const DEFAULT_QUERY_PROFILE = {
+    socketTimeout: 1500,
+    attemptTimeout: 2500,
+    maxAttempts: 1
+};
+
+const SLOW_QUERY_PROFILES = {
+    killingfloor: { socketTimeout: 1500, attemptTimeout: 7000, maxAttempts: 2 },
+    ut2004: { socketTimeout: 1500, attemptTimeout: 7000, maxAttempts: 2 }
+};
+
+function getQueryProfile(gameType) {
+    return SLOW_QUERY_PROFILES[gameType] || DEFAULT_QUERY_PROFILE;
+}
+
+const QUERY_DEBUG = process.env.GSS_QUERY_DEBUG === '1'
+    || process.env.GSS_QUERY_DEBUG === 'true';
+
+function dumpQueryError(gameType, host, port, err) {
+    if (!QUERY_DEBUG) return;
+    /* eslint-disable no-console */
+    console.error(`[GSS] query FAILED type=${gameType} ${host}:${port}`);
+    console.error(err && err.stack ? err.stack : err);
+    // gamedig may attach the per-attempt errors that its top-level message hides.
+    if (err && err.cause) console.error('  cause:', err.cause);
+    if (err && Array.isArray(err.errors)) {
+        err.errors.forEach((e, i) => console.error(`  attempt[${i}]:`, e && e.message ? e.message : e));
+    }
+    /* eslint-enable no-console */
+}
 
 function sanitizeServerKey(serverIP) {
     return serverIP.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
@@ -76,6 +101,8 @@ function offlinePayload(connect) {
 async function queryServer(server) {
     const gameType = server.GameType || 'minecraft';
     const { host, port, display } = parseAddress(server.ServerIP, gameType);
+    const profile = getQueryProfile(gameType);
+    const meta = { gameType, address: display };
 
     let state;
     try {
@@ -83,12 +110,14 @@ async function queryServer(server) {
             type: gameType,
             host,
             port,
-            socketTimeout: QUERY_SOCKET_TIMEOUT_MS,
-            attemptTimeout: QUERY_ATTEMPT_TIMEOUT_MS,
-            maxAttempts: QUERY_MAX_ATTEMPTS
+            socketTimeout: profile.socketTimeout,
+            attemptTimeout: profile.attemptTimeout,
+            maxAttempts: profile.maxAttempts,
+            debug: QUERY_DEBUG
         });
     } catch (err) {
-        return { data: offlinePayload(display), error: err };
+        dumpQueryError(gameType, host, port, err);
+        return { data: offlinePayload(display), error: err, meta };
     }
 
     let playerList = extractList(state.players);
@@ -112,9 +141,9 @@ async function queryServer(server) {
                 type: 'minecraft',
                 host: alt.host,
                 port: alt.port,
-                socketTimeout: QUERY_SOCKET_TIMEOUT_MS,
-                attemptTimeout: QUERY_ATTEMPT_TIMEOUT_MS,
-                maxAttempts: QUERY_MAX_ATTEMPTS
+                socketTimeout: DEFAULT_QUERY_PROFILE.socketTimeout,
+                attemptTimeout: DEFAULT_QUERY_PROFILE.attemptTimeout,
+                maxAttempts: DEFAULT_QUERY_PROFILE.maxAttempts
             });
             const altList = extractList(altState.players);
             const altBots = extractList(altState.bots);
@@ -143,7 +172,8 @@ async function queryServer(server) {
             ping: state.ping || 0,
             motd: gameType === 'minecraft' ? parseMinecraftMOTD(state.description) : ''
         },
-        error: null
+        error: null,
+        meta
     };
 }
 

@@ -27,7 +27,7 @@ async function dispatchButton(interaction) {
 
 module.exports = {
     name: 'GameServerStatus',
-    version: '1.1.0',
+    version: '1.1.1',
     get description() {
         return t('addon.description');
     },

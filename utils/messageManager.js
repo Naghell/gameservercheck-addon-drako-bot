@@ -104,9 +104,25 @@ class StatusController {
         const channel = await this.fetchChannel(server);
         if (!channel) return;
 
-        const { data: freshData, error } = await queryServer(server);
+        const { data: freshData, error, meta } = await queryServer(server);
+        const gameType = meta?.gameType || server.GameType || 'minecraft';
+        const address = meta?.address || server.ServerIP;
         if (error && this.config.Debug) {
-            log.debug(t('lifecycle.queryOffline', { server: server.ServerName, error: error.message }));
+            log.debug(t('lifecycle.queryOffline', {
+                server: server.ServerName,
+                gameType,
+                address,
+                error: error.message
+            }));
+        } else if (!error && this.config.Debug) {
+            log.debug(t('lifecycle.queryOk', {
+                server: server.ServerName,
+                gameType,
+                address,
+                online: freshData.players?.online ?? 0,
+                max: freshData.players?.max ?? 0,
+                ping: freshData.ping ?? 0
+            }));
         }
 
         const cached = this.cache.get(serverKey);
@@ -119,11 +135,22 @@ class StatusController {
             lastGood = freshData;
         } else {
             consecutiveFailures = (cached?.consecutiveFailures || 0) + 1;
-            const canHold = lastGood?.online
-                && (lastGood.players?.online || 0) > 0
-                && consecutiveFailures <= MAX_GRACE_FAILURES;
+
+            const canHold = lastGood?.online && consecutiveFailures <= MAX_GRACE_FAILURES;
             if (canHold) {
                 effectiveData = lastGood;
+                if (this.config.Debug) {
+                    log.debug(t('lifecycle.graceHold', {
+                        server: server.ServerName,
+                        failures: consecutiveFailures,
+                        max: MAX_GRACE_FAILURES
+                    }));
+                }
+            } else if (lastGood?.online && this.config.Debug) {
+                log.debug(t('lifecycle.graceExpired', {
+                    server: server.ServerName,
+                    failures: consecutiveFailures
+                }));
             }
         }
 
